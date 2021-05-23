@@ -69,6 +69,7 @@ static int cxDib2, cyDib2;
 
 //融合图像2
 static COLOR det_image2[IMAGE_HIGHT][IMAGE_WIDTH/2];//要显示的目标图像
+static COLOR edge_det_image2[IMAGE_HIGHT][IMAGE_WIDTH / 2];//要显示的目标图像
 static int n2 = 0;
 
 //划线
@@ -532,21 +533,33 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			if (smooth == 1) {
 				FilterBmp(smooth_kernel);
+				SetDIBitsToDevice(hdc,
+					currentxPos,
+					currentyPos,
+					176,
+					288,
+					0,
+					0,
+					0,
+					144,
+					edge_det_image2,
+					pbmi2,
+					DIB_RGB_COLORS);
 			}
-			
-			SetDIBitsToDevice(hdc,
-				currentxPos,
-				currentyPos,
-				176,
-				288,
-				0,
-				0,
-				0,
-				144,
-				det_image2,
-				pbmi2,
-				DIB_RGB_COLORS);
-
+			else {
+				SetDIBitsToDevice(hdc,
+					currentxPos,
+					currentyPos,
+					176,
+					288,
+					0,
+					0,
+					0,
+					144,
+					det_image2,
+					pbmi2,
+					DIB_RGB_COLORS);
+			}
 			pBity2 = mybuf2; // let pBity to point at the first place of the file
 		}
 
@@ -587,7 +600,7 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 void FilterBmp(float kernel[3][3])
 {
 	int i, j, x, y, idx, idy;
-	byte r, g, b;
+	byte r, g, b, r2, g2, b2;
 	float sumR, sumG, sumB;
 	int finalR, finalG, finalB;
 	float weight;
@@ -631,9 +644,10 @@ void FilterBmp(float kernel[3][3])
 			finalR = det_image2[i][j].r - ABS(sumR);
 			finalG = det_image2[i][j].g - ABS(sumG);
 			finalB = det_image2[i][j].b - ABS(sumB);
-			det_image2[i][j].r = EDGE(finalR);
-			det_image2[i][j].g = EDGE(finalG);
-			det_image2[i][j].b = EDGE(finalB);
+
+			edge_det_image2[i][j].r = EDGE(finalR);
+			edge_det_image2[i][j].g = EDGE(finalG);
+			edge_det_image2[i][j].b = EDGE(finalB);
 		}
 	}
 }
