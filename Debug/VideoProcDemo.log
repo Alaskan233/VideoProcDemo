@@ -1,6 +1,9 @@
 ﻿  VideoProcDemo.cpp
-d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(91): warning C4305: “初始化”: 从“double”到“float”截断
-d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(626): warning C4244: “=”: 从“float”转换到“byte”，可能丢失数据
-d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(627): warning C4244: “=”: 从“float”转换到“byte”，可能丢失数据
+d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(92): warning C4305: “初始化”: 从“double”到“float”截断
 d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(628): warning C4244: “=”: 从“float”转换到“byte”，可能丢失数据
+d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(629): warning C4244: “=”: 从“float”转换到“byte”，可能丢失数据
+d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(630): warning C4244: “=”: 从“float”转换到“byte”，可能丢失数据
+d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(631): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(632): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(633): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
   VideoProcDemo.vcxproj -> D:\Code\win32\VideoProcDemo\Debug\VideoProcDemo.exe

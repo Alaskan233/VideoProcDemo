@@ -9,7 +9,8 @@
 #include <windowsx.h>
 
 #define MAX_LOADSTRING 100
-#define ABS(a) a<0?-a:a
+#define ABS(a) a < 0 ? -a : a
+#define EDGE(a) a < 0 ? 0 : a
 
 // 全局变量:
 HINSTANCE hInst;                                // 当前实例
@@ -588,6 +589,7 @@ void FilterBmp(float kernel[3][3])
 	int i, j, x, y, idx, idy;
 	byte r, g, b;
 	float sumR, sumG, sumB;
+	int finalR, finalG, finalB;
 	float weight;
 
 	for (i = 0; i < 288; i++)
@@ -626,9 +628,12 @@ void FilterBmp(float kernel[3][3])
 			r = ABS(sumR);
 			g = ABS(sumG);
 			b = ABS(sumB);
-			det_image2[y][x].r = r;
-			det_image2[y][x].g = g;
-			det_image2[y][x].b = b;
+			finalR = det_image2[i][j].r - ABS(sumR);
+			finalG = det_image2[i][j].g - ABS(sumG);
+			finalB = det_image2[i][j].b - ABS(sumB);
+			det_image2[i][j].r = EDGE(finalR);
+			det_image2[i][j].g = EDGE(finalG);
+			det_image2[i][j].b = EDGE(finalB);
 		}
 	}
 }
