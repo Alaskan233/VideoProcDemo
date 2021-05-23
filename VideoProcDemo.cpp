@@ -7,7 +7,6 @@
 #include <commdlg.h>
 #include <shobjidl_core.h>
 #include <windowsx.h>
-#include <afxwin.h>
 
 #define MAX_LOADSTRING 100
 #define ABS(a) a<0?-a:a
@@ -90,13 +89,6 @@ static int currentyPos = -144;
 float smooth_kernel[3][3] = { {0.11,0.11,0.11},
 							  {0.11,0.11,0.11},
 							  {0.11,0.11,0.11} };//用于图像模糊的滤波核
-
-HDC hdcMem_origin = NULL;                       // 原BMP图像的绘图句柄
-BITMAP  bmp_origin;                             // 保存原BMP图像的相关信息结构体
-HDC hdcMem_ori_copy = NULL;                     // 保存了bmp_ori_copy的绘图句柄
-BITMAP bmp;                                     // 待显示BMP图像的相关信息结构体
-BITMAP bmp_ori_copy;                            // hbmp_ori_copy所对应的图像信息结构体
-
 int smooth = 0;
 
 // 此代码模块中包含的函数的前向声明:
@@ -104,6 +96,7 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+void FilterBmp(float kernel[3][3]);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_opt_ HINSTANCE hPrevInstance,
@@ -211,10 +204,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc;
-	CDC dc;
-	int penWidth = 1;
-	CPen pen(PS_SOLID, penWidth, RGB(255, 0, 0));
-	dc.SelectObject(&pen);
 
 	switch (message)
 	{
@@ -540,13 +529,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				}
 
-			/*
 			if (smooth == 1) {
-				BitBlt(hdcMem_ori_copy, 0, 0, bmp_origin.bmWidth, bmp_origin.bmHeight, hdcMem_origin, 0, 0, SRCCOPY);
-				FilterBmp(smooth_kernel, bmp_ori_copy, bmp);
-				InvalidateRect(hWnd, NULL, false);
+				FilterBmp(smooth_kernel);
 			}
-			*/
 			
 			SetDIBitsToDevice(hdc,
 				currentxPos,
@@ -598,18 +583,16 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	return (INT_PTR)FALSE;
 }
 
-void FilterBmp(float kernel[3][3], BITMAP bmp_src, BITMAP bmp_dst)
+void FilterBmp(float kernel[3][3])
 {
 	int i, j, x, y, idx, idy;
 	byte r, g, b;
 	float sumR, sumG, sumB;
 	float weight;
 
-	int bytesPerPixel = bmp_src.bmBitsPixel / 8;
-
-	for (i = 0; i < bmp.bmHeight; i++)
+	for (i = 0; i < 288; i++)
 	{
-		for (j = 0; j < bmp.bmWidth; j++)
+		for (j = 0; j < 176; j++)
 		{
 			//以每个像素为中心进行3x3的加权求和
 			sumR = sumG = sumB = 0;
@@ -617,14 +600,16 @@ void FilterBmp(float kernel[3][3], BITMAP bmp_src, BITMAP bmp_dst)
 			{
 				for (x = j - 1; x <= j + 1; x++)
 				{
-					if (y < 0 || y >= bmp.bmHeight || x < 0 || x >= bmp.bmWidth)
+					if (y < 0 || y >= 288 || x < 0 || x >= 176)
 					{
 						//如果待加权位置越界，则其“像素”值视为0,0,0
 						r = g = b = 0;
 					}
 					else {
 						//获得待加权位置的像素值
-						MyGetPixel((byte*)bmp_src.bmBits, bytesPerPixel, bmp_src.bmWidthBytes, x, y, r, g, b);
+						r = det_image2[y][x].r;
+						g = det_image2[y][x].g;
+						b = det_image2[y][x].b;
 					}
 
 					//与滤波核的对应位置进行加权求和
@@ -637,29 +622,13 @@ void FilterBmp(float kernel[3][3], BITMAP bmp_src, BITMAP bmp_dst)
 				}
 			}
 
-			//将结果写入输出位图中
+			//将结果输出
 			r = ABS(sumR);
 			g = ABS(sumG);
 			b = ABS(sumB);
-			MySetPixel((byte*)bmp_dst.bmBits, bytesPerPixel, bmp_dst.bmWidthBytes, j, i, r, g, b);
+			det_image2[y][x].r = r;
+			det_image2[y][x].g = g;
+			det_image2[y][x].b = b;
 		}
 	}
-}
-
-void MySetPixel(byte* pD, int bytesPerPixel, int widthBytes, int x, int y, byte r, byte g, byte b)
-//pD: 指向位图数据区的首字节指针
-//bytesPerPixel: 每个像素需几个字节
-//widthBytes: 图像每行所需的字节数
-{
-	*(pD + y * widthBytes + x * bytesPerPixel) = b;
-	*(pD + y * widthBytes + x * bytesPerPixel + 1) = g;
-	*(pD + y * widthBytes + x * bytesPerPixel + 2) = r;
-
-}
-
-void MyGetPixel(byte* pD, int bytesPerPixel, int widthBytes, int x, int y, byte& r, byte& g, byte& b)
-{
-	b = *(pD + y * widthBytes + x * bytesPerPixel);
-	g = *(pD + y * widthBytes + x * bytesPerPixel + 1);
-	r = *(pD + y * widthBytes + x * bytesPerPixel + 2);
 }
