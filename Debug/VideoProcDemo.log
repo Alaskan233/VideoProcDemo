@@ -3,9 +3,6 @@ d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(93): warning C4305: 
 d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(641): warning C4244: “=”: 从“float”转换到“byte”，可能丢失数据
 d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(642): warning C4244: “=”: 从“float”转换到“byte”，可能丢失数据
 d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(643): warning C4244: “=”: 从“float”转换到“byte”，可能丢失数据
-d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(644): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
-d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(645): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
-d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(646): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
 d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(603): warning C4101: “b2”: 未引用的局部变量
 d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(603): warning C4101: “r2”: 未引用的局部变量
 d:\code\win32\videoprocdemo\videoprocdemo\videoprocdemo.cpp(603): warning C4101: “g2”: 未引用的局部变量

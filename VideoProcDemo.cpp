@@ -641,9 +641,10 @@ void FilterBmp(float kernel[3][3])
 			r = ABS(sumR);
 			g = ABS(sumG);
 			b = ABS(sumB);
-			finalR = det_image2[i][j].r - ABS(sumR);
-			finalG = det_image2[i][j].g - ABS(sumG);
-			finalB = det_image2[i][j].b - ABS(sumB);
+
+			finalR = det_image2[i][j].r - r;
+			finalG = det_image2[i][j].g - g;
+			finalB = det_image2[i][j].b - b;
 
 			edge_det_image2[i][j].r = EDGE(finalR);
 			edge_det_image2[i][j].g = EDGE(finalG);
